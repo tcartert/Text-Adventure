@@ -10,6 +10,7 @@ public class Player {
 	
 	public Player(String n) {
 		this.name = n;
+		this.inventory = new Inventory();
 	}
 	
 	public String getName() {
