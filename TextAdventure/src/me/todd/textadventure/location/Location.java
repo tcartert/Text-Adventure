@@ -1,9 +1,10 @@
-package me.todd.textadventure;
+package me.todd.textadventure.location;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
+import me.todd.textadventure.Main;
 import me.todd.textadventure.inventory.Item;
+import me.todd.textadventure.util.Util;
 
 public class Location {
 
@@ -24,6 +25,8 @@ public class Location {
 	public String getName() {
 		return this.name;
 	}
+	
+	//DONE: Task 7
 	
 	public void setVisited() {
 		this.visited = true;
@@ -65,7 +68,15 @@ public class Location {
 	}
 	
 	public void Display() {
-			System.out.print("(" + hasVisited() + ") " + this.getName() + " - " + this.getDescription() + " (" + this.items.size()  + " Items)\n");
+		
+		//Done: Task 4
+		
+			System.out.print(this.getName() + " - " + this.getDescription() + " (" + this.items.size()  + " Items)\n");
+			Util.print("");
+			for(Direction dir : this.getLinkedLocations().keySet()){
+				Location loc = Main.getInstance().getLocations().get(this.getLinkedLocations().get(dir));
+				Util.print(dir.toString() + ": (" + loc.hasVisited() + ") " + loc.getName());
+			}
 	}
 	
 }

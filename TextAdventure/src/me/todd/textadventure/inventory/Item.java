@@ -2,6 +2,8 @@ package me.todd.textadventure.inventory;
 
 public class Item {
 
+	//Done: Task 3
+	
 	private String name;
 	private String description;
 	

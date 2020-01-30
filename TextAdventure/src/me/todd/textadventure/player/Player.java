@@ -1,20 +1,21 @@
-package me.todd.textadventure;
+package me.todd.textadventure.player;
 
 import me.todd.textadventure.inventory.Inventory;
+import me.todd.textadventure.location.Location;
 
 public class Player {
 
-	private String name;
+	private static Player player_instance = new Player();
+	
 	private Location Current;
 	private Inventory inventory;
 	
-	public Player(String n) {
-		this.name = n;
+	public Player() {
 		this.inventory = new Inventory();
 	}
 	
-	public String getName() {
-		return this.name;
+	public static Player getInstance() {
+		return player_instance;
 	}
 	
 	public Location getCurrent() {

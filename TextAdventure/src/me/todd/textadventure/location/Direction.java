@@ -1,4 +1,4 @@
-package me.todd.textadventure;
+package me.todd.textadventure.location;
 
 public enum Direction {
 
