@@ -32,6 +32,10 @@ public class Location {
 		this.visited = true;
 	}
 	
+	public Boolean getVisited() {
+		return this.visited;
+	}
+	
 	public String hasVisited() {
 		if(this.visited) return "VISITED";
 		return "NEW";
@@ -71,12 +75,14 @@ public class Location {
 		
 		//Done: Task 4
 		
-			System.out.print(this.getName() + " - " + this.getDescription() + " (" + this.items.size()  + " Items)\n");
+			Util.print(this.getName() + " - " + this.getDescription() + " (" + this.items.size()  + " Items)\n");
 			Util.print("");
 			for(Direction dir : this.getLinkedLocations().keySet()){
 				Location loc = Main.getInstance().getLocations().get(this.getLinkedLocations().get(dir));
 				Util.print(dir.toString() + ": (" + loc.hasVisited() + ") " + loc.getName());
 			}
 	}
+	
+
 	
 }

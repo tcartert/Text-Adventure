@@ -1,10 +1,16 @@
 package me.todd.textadventure;
 
+import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Scanner;
 
 import javax.swing.JFrame;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.text.DefaultCaret;
 
 import me.todd.textadventure.inventory.Item;
 import me.todd.textadventure.location.Direction;
@@ -33,12 +39,16 @@ public class Main {
 	}
 
 	public String[] inventory = {};
+	
+	public JTextArea textArea;
+	public JTextField textField;
 
 
 	public static void main(String[] args) {
 		instance = new Main();
 		instance.createLocations();
 		instance.createPlayer();
+		instance.createGUI();
 		instance.startGame();
 
 	}
@@ -60,66 +70,94 @@ public class Main {
 		locations.put("Hills", new Location("Hills", "You are in the hills. ").addLink(Direction.NORTH, "City").addLink(Direction.EAST, "Woods").build());
 	}
 	
+	private void createGUI() {
+	    JFrame f = new JFrame("Text-Adventure");
+	    f.setSize(700, 700);
+	    f.setLocation(300,200);
+	    textArea = new JTextArea(10, 40);
+	    textArea.setEditable(false);
+	    JScrollPane scroll = new JScrollPane(textArea);
+	    f.getContentPane().add(BorderLayout.CENTER, scroll);
+	    DefaultCaret caret = (DefaultCaret)textArea.getCaret();
+	    caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+	    textField = new JTextField(30);
+	    f.getContentPane().add(BorderLayout.SOUTH, textField);
+	    textField.addActionListener(new ActionListener() {
+
+	        @Override
+	        public void actionPerformed(ActionEvent e) {
+	           Util.print(textField.getText());
+	           parseCommand(textField.getText());
+	           textField.setText("");
+	        }
+	    });
+
+	    f.setVisible(true);
+	}
+	
+	private void parseCommand(String cmd) {
+		//DONE: 5
+		String[] command = cmd.split(" ");
+		if(command[0].equalsIgnoreCase("location")){
+			Util.print(Player.getInstance().getCurrent().getName());
+		}
+		else if(command[0].equalsIgnoreCase("pickup")) {
+			if(command.length > 1) {
+			if(Player.getInstance().getCurrent().getItems().containsKey(command[1])) {
+				Item item = Player.getInstance().getCurrent().getItems().get(command[1]);
+				Player.getInstance().getInventory().addItem(item);
+				Player.getInstance().getCurrent().removeItem(command[1]);
+				Util.print("you have picked up " + item.getName());
+			}
+			}
+		}
+		
+		else if(command[0].equalsIgnoreCase("items")) {
+			StringBuilder sb = new StringBuilder();
+			for(String item : Player.getInstance().getCurrent().getItems().keySet()) {
+				sb.append(item + ", ");
+			}
+			Util.print("Items: " + sb.toString() + "\n");
+		}
+		
+		//DONE: Task 6
+		
+		else if(command[0].equalsIgnoreCase("inventory")) {
+			StringBuilder sb = new StringBuilder();
+			for(Item item : Player.getInstance().getInventory().getItems()) {
+				sb.append(item.getName() + ", ");
+			}
+			Util.print("Inventory: " + sb.toString());
+		}
+		
+		//DONE: Task 8
+		
+		else if(command[0].equalsIgnoreCase("map")) {
+			StringBuilder sb = new StringBuilder();
+			Util.createMap(sb, Player.getInstance().getCurrent(),"", "", new ArrayList<String>());
+			Util.print(sb.toString());
+		}
+		else {
+		try {
+			String l = Player.getInstance().getCurrent().getLinkedLocations().get(Direction.valueOf(command[0].toUpperCase()));
+			Location loc = locations.get(l);
+			if(Player.getInstance().getCurrent().getLinkedLocations().containsValue(l)) {
+				Player.getInstance().setCurrent(loc);
+				loc.setVisited();
+			}
+			
+		}catch (IllegalArgumentException e) {
+			Util.print("You cannot go that way.");
+		}
+		}
+		startGame();
+	}
+	
 	private void startGame() {
-		while(true) {
 			
 			//DONE: Task 2,4,7
-			
+		
 			Player.getInstance().getCurrent().Display();
-			
-			Scanner scanner = new Scanner(System.in);
-			String[] command = scanner.nextLine().split(" ");
-			if(command[0].equalsIgnoreCase("location")){
-				Util.print(Player.getInstance().getCurrent().getName());
-				continue;
-			}
-			
-			//DONE: 5
-			
-			if(command[0].equalsIgnoreCase("pickup")) {
-				if(command.length > 1) {
-				if(Player.getInstance().getCurrent().getItems().containsKey(command[1])) {
-					Item item = Player.getInstance().getCurrent().getItems().get(command[1]);
-					Player.getInstance().getInventory().addItem(item);
-					Player.getInstance().getCurrent().removeItem(command[1]);
-					Util.print("you have picked up " + item.getName());
-					continue;
-				}
-				}
-				continue;
-			}
-			
-			if(command[0].equalsIgnoreCase("items")) {
-				StringBuilder sb = new StringBuilder();
-				for(String item : Player.getInstance().getCurrent().getItems().keySet()) {
-					sb.append(item + ", ");
-				}
-				Util.print("Items: " + sb.toString() + "\n");
-				continue;
-			}
-			
-			//DONE: Task 6
-			
-			if(command[0].equalsIgnoreCase("inventory")) {
-				StringBuilder sb = new StringBuilder();
-				for(Item item : Player.getInstance().getInventory().getItems()) {
-					sb.append(item.getName() + ", ");
-				}
-				Util.print("Inventory: " + sb.toString());
-			}
-			try {
-				String l = Player.getInstance().getCurrent().getLinkedLocations().get(Direction.valueOf(command[0].toUpperCase()));
-				Location loc = locations.get(l);
-				if(Player.getInstance().getCurrent().getLinkedLocations().containsValue(l)) {
-					Player.getInstance().setCurrent(loc);
-					loc.setVisited();
-				}
-				continue;
-				
-			}catch (IllegalArgumentException e) {
-				Util.print("You cannot go that way.");
-			}
 					
-		}
 	}
 }
