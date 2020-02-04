@@ -14,14 +14,14 @@ public class Util {
 	
 	//DONE: Task 8
 	
-	public static void createMap(StringBuilder buffer, Location loc, String prefix, String childrenPrefix, ArrayList<String> temp) {
-		buffer.append(prefix);
+	public static void createMap(StringBuilder sb, Location loc, String prefix, String childrenPrefix, ArrayList<String> temp) {
+		sb.append(prefix);
 		if(loc.getVisited()) {
-			buffer.append(loc.getName());
+			sb.append(loc.getName());
 		}else {
-			buffer.append("Unknown");
+			sb.append("Unknown");
 		}
-		buffer.append("\n");
+		sb.append("\n");
 		temp.add(loc.getName());
 		ArrayList<Location> locs = new ArrayList<>();
 		for(String s : loc.getLinkedLocations().values()){
@@ -33,9 +33,9 @@ public class Util {
 		for(Iterator<Location> it  = locs.iterator(); it.hasNext(); ) {
 			Location next = it.next();
 			if(it.hasNext()) {
-				createMap(buffer, next, childrenPrefix +"\u251C\u2500\u2500", childrenPrefix + "|   ", temp);
+				createMap(sb, next, childrenPrefix +"\u251C\u2500\u2500", childrenPrefix + "|   ", temp);
 			}else {
-				createMap(buffer, next, childrenPrefix + "\u2514\u2500\u2500 ", childrenPrefix + "|   ", temp);
+				createMap(sb, next, childrenPrefix + "\u2514\u2500\u2500 ", childrenPrefix + "|   ", temp);
 			}
 		}
 	}
