@@ -33,9 +33,9 @@ public class Util {
 		for(Iterator<Location> it  = locs.iterator(); it.hasNext(); ) {
 			Location next = it.next();
 			if(it.hasNext()) {
-				createMap(sb, next, childrenPrefix +"\u251C\u2500\u2500", childrenPrefix + "|   ", temp);
+				createMap(sb, next, childrenPrefix +"\u251C\u2500\u2500 ", childrenPrefix + "\uFF5C   ", temp);
 			}else {
-				createMap(sb, next, childrenPrefix + "\u2514\u2500\u2500 ", childrenPrefix + "|   ", temp);
+				createMap(sb, next, childrenPrefix + "\u2514\u2500\u2500 ", childrenPrefix + "\uFF5C   ", temp);
 			}
 		}
 	}
